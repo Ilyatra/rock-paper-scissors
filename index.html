@@ -4,16 +4,28 @@
    <meta charset="utf-8">
    <title>Rock Paper Scissors Game</title>
    <link rel="stylesheet" href="css.css">
-   <script src="js.js"></script>
+   <script src="js.js" defer></script>
 </head>
 <body>
-    <!-- <form>
-        <label class="form__label">
-            Введите 
-            <input type="text" class="form__input">
-        </label>
-        
-
-    </form> -->
+    <div class="selection-panel">
+        <button name="rock" type="submit">камень</button>
+        <button name="scissors">ножницы</button>
+        <button name="paper">бумага</button>
+    </div>
+    <div class="results">
+        <table class="total-score">
+            <tr>
+                <td>ваши победы</td>
+                <td>ничьи</td>
+                <td>победы компьютера</td>
+            </tr>
+            <tr>
+                <td class="total-score__player">0</td>
+                <td class="total-score__draw">0</td>
+                <td class="total-score__computer">0</td>
+            </tr>
+        </table>
+        <div class="results__who-win"></div>
+    </div>
 </body>
 </html>

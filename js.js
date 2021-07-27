@@ -1,18 +1,27 @@
+const panel = document.querySelector('.selection-panel');
+const whoWinField = document.querySelector('.results__who-win');
 const variant = {
-    "камень" : 1, "ножницы" : 2, "бумага" : 3
+    'камень' : 1, 
+    'ножницы' : 2, 
+    'бумага' : 3,
+}
+const translate = {
+    'rock' : 'камень',
+    'scissors' : 'ножницы',
+    'paper' : 'бумага',
 }
 const variantRev = {
     1 : "камень", 2 : "ножницы", 3 : "бумага"
 }
-function playerPlay() {
-    let playerSelection = "камень"
-    while (!variant[playerSelection]) {
-        playerSelection = prompt("Введите камень, ножницы или бумага","").toLowerCase();
-    }
-    return playerSelection;
-}
 
-function playRound(playerSelection, computerSelection) {
+panel.addEventListener('click', (e)=> {
+    if (e.target.tagName !== 'BUTTON') return;
+    let playerSelection = translate[e.target.name];
+    scoring(playRound(playerSelection, computerPlay()));
+    console.log(e.target.name);
+})
+
+const playRound = function playRound(playerSelection, computerSelection) {
     if (variant[playerSelection] === computerSelection) {
         declareDraw(playerSelection, computerSelection);
         return 2;
@@ -26,37 +35,43 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-function computerPlay() {
+const computerPlay = function computerPlay() {
     return Math.floor(Math.random() * 3) + 1;
 }
 
-function declareDraw(playerSelection, computerSelection) {
-    console.log(`Вы и компьютер выбрали ${computerSelection == 3 ? "бумагу": playerSelection}, ничья`); 
+const declareDraw = function declareDraw(playerSelection, computerSelection) {
+    whoWinField.innerHTML = `Вы и компьютер выбрали ${computerSelection == 3 ? "бумагу": playerSelection}, ничья`;
 }
 
-function declareWin(userWin, playerSelection, computerSelection) {
+const declareWin = function declareWin(userWin, playerSelection, computerSelection) {
     if (userWin) {
-        console.log(`Вы выбрали ${variant[playerSelection] == 3 ? 
-            "бумагу,": playerSelection + ","} компьютер - ${computerSelection == 3 ? "бумагу": variantRev[computerSelection]}, ${playerSelection} ${computerSelection == 3 ? "побеждают бумагу": "побеждает " + variantRev[computerSelection]} - победа за вами!`);  
+        whoWinField.innerHTML = `Вы выбрали ${variant[playerSelection] == 3 ? "бумагу,": playerSelection + ","} компьютер - ${computerSelection == 3 ? "бумагу": variantRev[computerSelection]}, ${playerSelection} ${computerSelection == 3 ? "побеждают бумагу": "побеждает " + variantRev[computerSelection]} - победа за вами!`;
     }else{
-        console.log(`Вы выбрали ${variant[playerSelection] == 3 ? 
-            "бумагу,": playerSelection + ","} компьютер - ${computerSelection == 3 ? "бумагу": variantRev[computerSelection]}, ${variantRev[computerSelection]} ${variant[playerSelection] == 3 ? "побеждают бумагу": "побеждает " + playerSelection} - победа за компьютером`);
+        whoWinField.innerHTML = `Вы выбрали ${variant[playerSelection] == 3 ? "бумагу,": playerSelection + ","} компьютер - ${computerSelection == 3 ? "бумагу": variantRev[computerSelection]}, ${variantRev[computerSelection]} ${variant[playerSelection] == 3 ? "побеждают бумагу": "побеждает " + playerSelection} - победа за компьютером`;
     }
 }
 
-function game() {
-    let total = [0,0,0];
-    for (let i = 0; i < 5; i++) {
-        total[playRound(playerPlay(), computerPlay())] += 1;
-    }
-    if (total[0] > total[1]){
-        console.log("Вы победили по итогу пяти матчей");
-    }else if(total[0] < total[1]){
-        console.log("Вы проиграли по итогу пяти матчей");
-    }else{
-        console.log("По итогу пяти матчей - ничья")
+const scoring = function scoring(winner) {
+    switch(winner) {
+        case 0: 
+            let comp = document.querySelector('.total-score__computer');
+            comp.innerHTML++;
+            if (comp.innerHTML == 5) gameRestart('компьютер победил');
+            break;
+        case 1:
+            let player = document.querySelector('.total-score__player');
+            player.innerHTML++;
+            if (player.innerHTML == 5) gameRestart('игрок победил');
+            break;
+        case 2:
+            document.querySelector('.total-score__draw').innerHTML++;
+            break;
     }
 }
 
-game();
-
+const gameRestart = function gameRestart(msg) {
+    document.querySelector('.total-score__player').innerHTML = '0';
+    document.querySelector('.total-score__computer').innerHTML = '0';
+    document.querySelector('.total-score__draw').innerHTML = '0';
+    alert(msg);
+}
